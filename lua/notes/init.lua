@@ -1,21 +1,6 @@
 local api = vim.api
 local buf, win
 
-function replace_vars(str, vars)
-  -- Allow replace_vars{str, vars} syntax as well as replace_vars(str, {vars})
-  if not vars then
-    vars = str
-    str = vars[1]
-  end
-  return (string.gsub(
-    str,
-    "({([^}]+)})",
-    function(whole, i)
-      return vars[i] or whole
-    end
-  ))
-end
-
 local function open_window()
   buf = api.nvim_create_buf(false, true)
   local border_buf = api.nvim_create_buf(false, true)
@@ -81,8 +66,21 @@ local function open_window()
   vim.api.nvim_command("lcd ~/Nextcloud/Obsidian/OBSNotes")
 end
 
+function replace_vars(str, vars)
+  -- Allow replace_vars{str, vars} syntax as well as replace_vars(str, {vars})
+  if not vars then
+    vars = str
+    str = vars[1]
+  end
+  return (string.gsub(
+    str,
+    "({([^}]+)})",
+    function(whole, i)
+      return vars[i] or whole
+    end
+  ))
+end
+
 return {
-  printWindowSize = printWindowSize,
-  notesPopup = notesPopup,
   open_window = open_window
 }
