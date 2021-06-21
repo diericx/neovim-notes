@@ -1,7 +1,12 @@
 local api = vim.api
 local buf, win
 
-local function open_window()
+local function go_to_notes(notes_root)
+  vim.api.nvim_command("lcd " .. notes_root)
+  vim.api.nvim_command("edit " .. notes_root)
+end
+
+local function open_window(notes_root, dir, note)
   buf = api.nvim_create_buf(false, true)
   local border_buf = api.nvim_create_buf(false, true)
 
@@ -62,8 +67,8 @@ local function open_window()
   -- we can add title already here, because first line will never change
   api.nvim_buf_add_highlight(buf, -1, "WhidHeader", 0, 0, -1)
 
-  vim.api.nvim_command("edit ~/Nextcloud/Obsidian/OBSNotes/Daily/" .. os.date("%Y-%m-%d") .. ".md")
-  vim.api.nvim_command("lcd ~/Nextcloud/Obsidian/OBSNotes")
+  vim.api.nvim_command("lcd " .. notes_root)
+  vim.api.nvim_command("edit " .. notes_root .. dir .. note)
 end
 
 function replace_vars(str, vars)
@@ -82,5 +87,6 @@ function replace_vars(str, vars)
 end
 
 return {
-  open_window = open_window
+  open_window = open_window,
+  go_to_notes = go_to_notes
 }
